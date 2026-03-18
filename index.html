@@ -357,7 +357,7 @@ setInterval(updateClock, 1000);
 updateClock();
 
 /* PARTICLES */
-for(var i=0;i<40;i++){
+for(var i=0;i<20;i++){
   var p=document.createElement("div");
   p.className="particle";
   p.style.left=Math.random()*100+"vw";
@@ -532,7 +532,7 @@ document.addEventListener('keydown',function(e){
 
   function buildStars(){
     sd=99;stars=[];
-    var total=Math.min(10000,Math.floor(W*H/100));
+    var total = Math.min(2500, Math.floor(W*H/300));
     for(var i=0;i<total;i++){
       var inBand=rnd()<0.62;
       var x,y;
@@ -638,7 +638,7 @@ document.addEventListener('keydown',function(e){
     }
 
     /* shooting stars */
-    if(Math.random()<0.005&&shooters.length<5){
+    if(Math.random()<0.002&&shooters.length<2){
       var ang=0.15+Math.random()*0.40;
       shooters.push({
         x:W*(0.05+Math.random()*0.85),y:H*(0.02+Math.random()*0.38),
