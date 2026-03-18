@@ -36,7 +36,8 @@ body {
   -webkit-backdrop-filter: blur(20px);
   padding: 30px;
   border-radius: 25px;
-  width: 360px;
+  width: min(480px, 95vw); 
+  padding: 35px;
   box-shadow: 0 0 30px rgba(240,240,255,0.3), 0 0 80px rgba(210,160,120,0.3);
   animation: floatConsole 8s ease-in-out infinite, consoleGlow 6s ease-in-out infinite;
 }
@@ -133,11 +134,11 @@ select {
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .calc-btn {
-  padding: 14px;
+  padding: 16px;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.1);
   background: rgba(25,25,50,0.7);
@@ -596,7 +597,7 @@ document.addEventListener('keydown',function(e){
     nbs.forEach(function(n){
       var nx=W*n.ox+Math.sin(t*n.s*1.4)*W*0.018;
       var ny=H*n.oy+Math.cos(t*n.s)*H*0.022;
-      var pulse=0.72+0.28*Math.sin(t*n.s*5+n.ox*9);
+      var pulse=0.8+0.2*Math.sin(t*n.s*2);
       var ng=cx.createRadialGradient(nx,ny,0,nx,ny,n.rx);
       ng.addColorStop(0,'rgba('+n.r+','+n.g+','+n.b+','+(n.a*pulse*2.2).toFixed(3)+')');
       ng.addColorStop(0.5,'rgba('+n.r+','+n.g+','+n.b+','+(n.a*pulse).toFixed(3)+')');
@@ -621,7 +622,7 @@ document.addEventListener('keydown',function(e){
       var s=stars[i];
       var tw=0.5+0.5*Math.sin(t*s.sp+s.ph);
       var a=s.alpha*tw;
-      if(s.big){
+      if(s.big&&Math.random()>0.4){
         var bloom=cx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.sz*7);
         bloom.addColorStop(0,'rgba('+s.r+','+s.g+','+s.b+','+(a*0.50).toFixed(3)+')');
         bloom.addColorStop(1,'rgba(0,0,0,0)');
@@ -668,12 +669,23 @@ document.addEventListener('keydown',function(e){
     au.addColorStop(1,'rgba(0,0,0,0)');
     cx.fillStyle=au;cx.fillRect(0,0,W,H*0.16);
 
-    requestAnimationFrame(frame);
+}
+
+  let lastTime = performance.now();
+const fps = 45; // smooth but lighter
+const interval = 1000 / fps;
+
+function animate(now){
+  if (now - lastTime > interval){
+    lastTime = now;
+    frame(now);
   }
+  requestAnimationFrame(animate);
+}  
 
   window.addEventListener('resize',resize);
   resize();
-  requestAnimationFrame(frame);
+  requestAnimationFrame(animate);
 })();
 
 </script>
