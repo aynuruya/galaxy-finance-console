@@ -396,29 +396,26 @@ function backspace(){
   updateDisplay(expr.replace(/\*/g,'×').replace(/\//g,'÷')||'0','');
 }
 function calculate(){
-  if(!expr || /[+\-*/.]$/.test(expr)) {
-    updateDisplay('0','');
-    expr='';
-    return;
-  }
+  if(!expr) return;
 
   try{
-    var prev = expr;
-    var result = Function('"use strict";return('+expr+')')();
+    let cleanExpr = expr.replace(/%/g, '/100');
+
+    let result = Function('"use strict";return(' + cleanExpr + ')')();
 
     if (!isFinite(result)) throw "Math error";
 
     result = parseFloat(result.toFixed(10));
 
-    addHistory(prev.replace(/\*/g,'×').replace(/\//g,'÷')+' = '+result);
+    addHistory(expr.replace(/\*/g,'×').replace(/\//g,'÷') + ' = ' + result);
 
-    updateDisplay(String(result), prev.replace(/\*/g,'×').replace(/\//g,'÷'));
+    updateDisplay(String(result), expr.replace(/\*/g,'×').replace(/\//g,'÷'));
 
     expr = String(result);
     justCalc = true;
 
   } catch(e){
-    updateDisplay('0','');
+    updateDisplay('Error','');
     expr='';
   }
 }
@@ -696,4 +693,3 @@ function animate(now){
 </script>
 </body>
 </html>
-
