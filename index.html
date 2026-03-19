@@ -148,6 +148,26 @@ select {
   transition: 0.3s;
   font-family: Segoe UI, sans-serif;
   box-shadow: 0 0 5px rgba(240,240,255,0.2), inset 0 0 5px rgba(255,255,255,0.05);
+
+  /* ADD THESE 👇 */
+  position: relative;
+  overflow: hidden;
+}
+
+  .ripple {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(240,240,255,0.6) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  animation: rippleAnim 0.5s ease-out;
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  from { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  to   { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
 }
 
 .calc-btn:hover {
@@ -689,6 +709,20 @@ function animate(now){
   resize();
   requestAnimationFrame(animate);
 })();
+
+  document.querySelectorAll('.calc-btn').forEach(btn => {
+  btn.addEventListener('click', function(e){
+    let ripple = document.createElement("span");
+    ripple.className = "ripple";
+    this.appendChild(ripple);
+
+    let rect = this.getBoundingClientRect();
+    ripple.style.left = (e.clientX - rect.left) + "px";
+    ripple.style.top = (e.clientY - rect.top) + "px";
+
+    setTimeout(() => ripple.remove(), 500);
+  });
+});
 
 </script>
 </body>
