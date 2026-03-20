@@ -416,15 +416,16 @@ function backspace(){
   updateDisplay(expr.replace(/\*/g,'×').replace(/\//g,'÷')||'0','');
 }
 function calculate(){
-  if(!expr || /[+\-*/.]$/.test(expr)) {
+  if(!expr){
     updateDisplay('0','');
-    expr='';
     return;
   }
 
   try{
     var prev = expr;
-    var result = Function('"use strict";return('+expr+')')();
+
+    // safer eval
+    var result = Function('"use strict";return (' + expr + ')')();
 
     if (!isFinite(result)) throw "Math error";
 
@@ -438,7 +439,7 @@ function calculate(){
     justCalc = true;
 
   } catch(e){
-    updateDisplay('0','');
+    updateDisplay('Error','');
     expr='';
   }
 }
