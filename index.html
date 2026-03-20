@@ -415,6 +415,7 @@ function backspace(){
   expr=expr.slice(0,-1);
   updateDisplay(expr.replace(/\*/g,'×').replace(/\//g,'÷')||'0','');
 }
+  
 function calculate(){
   if(!expr){
     updateDisplay('0','');
@@ -422,16 +423,17 @@ function calculate(){
   }
 
   try{
-    var prev = expr;
+    let prev = expr;
 
-    // safer eval
-    var result = Function('"use strict";return (' + expr + ')')();
+    let result = eval(expr); // simpler + stable for now
 
     if (!isFinite(result)) throw "Math error";
 
     result = parseFloat(result.toFixed(10));
 
-    addHistory(prev.replace(/\*/g,'×').replace(/\//g,'÷')+' = '+result);
+    if(typeof addHistory === "function"){
+      addHistory(prev.replace(/\*/g,'×').replace(/\//g,'÷') + ' = ' + result);
+    }
 
     updateDisplay(String(result), prev.replace(/\*/g,'×').replace(/\//g,'÷'));
 
@@ -441,6 +443,26 @@ function calculate(){
   } catch(e){
     updateDisplay('Error','');
     expr='';
+  }
+}
+  function addHistory(item){
+  let list = document.getElementById("historyList");
+
+  if(!list) return; // safety
+
+  let div = document.createElement("div");
+  div.className = "history-item";
+  div.textContent = item;
+
+  div.onclick = () => {
+    expr = item.split("=")[0].trim();
+    updateDisplay(expr, '');
+  };
+
+  list.prepend(div);
+
+  if(list.children.length > 10){
+    list.removeChild(list.lastChild);
   }
 }
   
