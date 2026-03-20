@@ -614,16 +614,14 @@ document.addEventListener('keydown',function(e){
     cx.fillStyle='#000008';
     cx.fillRect(0,0,W,H);
 
-    /* milky way band */
-    var band=cx.createLinearGradient(W*0.08,H*0.82,W*0.92,H*0.08);
-    band.addColorStop(0,'rgba(0,0,0,0)');
-    band.addColorStop(0.15,'rgba(20,8,55,0.22)');
-    band.addColorStop(0.32,'rgba(65,35,140,0.32)');
-    band.addColorStop(0.50,'rgba(140,95,240,0.42)');
-    band.addColorStop(0.68,'rgba(65,35,140,0.32)');
-    band.addColorStop(0.85,'rgba(20,8,55,0.22)');
-    band.addColorStop(1,'rgba(0,0,0,0)');
-    cx.fillStyle=band;cx.fillRect(0,0,W,H);
+    /* soft galaxy core glow */
+var core = cx.createRadialGradient(W*0.5, H*0.5, 0, W*0.5, H*0.5, W*0.6);
+core.addColorStop(0, 'rgba(120, 80, 255, 0.25)');
+core.addColorStop(0.4, 'rgba(80, 40, 160, 0.15)');
+core.addColorStop(1, 'rgba(0,0,0,0)');
+cx.fillStyle = core;
+cx.fillRect(0, 0, W, H);
+
 
     /* galactic core */
     var gx=W*0.43,gy=H*0.52;
@@ -681,9 +679,21 @@ document.addEventListener('keydown',function(e){
         cx.beginPath();cx.moveTo(s.x-s.sz*5,s.y);cx.lineTo(s.x+s.sz*5,s.y);cx.stroke();
         cx.beginPath();cx.moveTo(s.x,s.y-s.sz*5);cx.lineTo(s.x,s.y+s.sz*5);cx.stroke();
       }
-      cx.beginPath();cx.arc(s.x,s.y,s.sz,0,Math.PI*2);
-      cx.fillStyle='rgba('+s.r+','+s.g+','+s.b+','+a.toFixed(3)+')';
-      cx.fill();
+
+      /* star glow */
+var glow = cx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.sz * 4);
+glow.addColorStop(0, 'rgba('+s.r+','+s.g+','+s.b+','+(a*0.8)+')');
+glow.addColorStop(1, 'rgba(0,0,0,0)');
+cx.fillStyle = glow;
+cx.beginPath();
+cx.arc(s.x, s.y, s.sz * 4, 0, Math.PI * 2);
+cx.fill();
+
+/* core star */
+cx.beginPath();
+cx.arc(s.x, s.y, s.sz, 0, Math.PI * 2);
+cx.fillStyle = 'rgba('+s.r+','+s.g+','+s.b+','+a+')';
+cx.fill();
     }
 
     /* shooting stars */
@@ -706,16 +716,6 @@ document.addEventListener('keydown',function(e){
       cx.beginPath();cx.moveTo(tx,ty);cx.lineTo(s.x,s.y);cx.stroke();
       s.x+=s.vx;s.y+=s.vy;s.life-=s.decay;
     });
-
-    /* aurora shimmer */
-    var sh=Math.sin(t*0.06)*0.12;
-    var au=cx.createLinearGradient(0,0,W,0);
-    au.addColorStop(0,'rgba(0,0,0,0)');
-    au.addColorStop(0.22+sh,'rgba(70,0,170,'+(0.07+0.03*Math.sin(t*0.10)).toFixed(3)+')');
-    au.addColorStop(0.50,'rgba(0,160,255,'+(0.06+0.03*Math.cos(t*0.08)).toFixed(3)+')');
-    au.addColorStop(0.78-sh,'rgba(90,0,190,'+(0.07+0.03*Math.sin(t*0.12)).toFixed(3)+')');
-    au.addColorStop(1,'rgba(0,0,0,0)');
-    cx.fillStyle=au;cx.fillRect(0,0,W,H*0.16);
 
 }
 
